@@ -23,7 +23,7 @@ variable "cpus" {
 }
 
 variable "kubernetes_version" {
-  description = "Kubernetes version (e.g. 'v1.28.0')"
+  description = "Kubernetes version e.g. v1.28.0"
   type        = string
   default     = "v1.28.0"
 }
