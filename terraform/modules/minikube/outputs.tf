@@ -1,23 +1,6 @@
 output "cluster_name" {
-  value = minikube_cluster.this.cluster_name
+  description = "Minikube cluster/profile name"
+  value       = var.cluster_name
+  depends_on  = [null_resource.minikube]
 }
 
-output "host" {
-  description = "Kubernetes API server host"
-  value       = minikube_cluster.this.host
-}
-
-output "client_certificate" {
-  value     = minikube_cluster.this.client_certificate
-  sensitive = true
-}
-
-output "client_key" {
-  value     = minikube_cluster.this.client_key
-  sensitive = true
-}
-
-output "cluster_ca_certificate" {
-  value     = minikube_cluster.this.cluster_ca_certificate
-  sensitive = true
-}

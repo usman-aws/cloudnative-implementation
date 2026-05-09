@@ -2,10 +2,6 @@ terraform {
   required_version = ">= 1.5.0"
 
   required_providers {
-    minikube = {
-      source  = "scott-the-programmer/minikube"
-      version = "~> 0.4"
-    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "~> 2.23"
@@ -13,22 +9,9 @@ terraform {
   }
 }
 
-module "minikube" {
-  source             = "../../modules/minikube"
-  cluster_name       = var.cluster_name
-  driver             = var.driver
-  memory             = var.memory
-  cpus               = var.cpus
-  kubernetes_version = var.kubernetes_version
-  addons             = var.addons
-}
-
 provider "kubernetes" {
-  host = module.minikube.host
-
-  client_certificate     = module.minikube.client_certificate
-  client_key             = module.minikube.client_key
-  cluster_ca_certificate = module.minikube.cluster_ca_certificate
+  config_path    = "~/.kube/config"
+  config_context = "todo-app"
 }
 
 module "k8s_manifests" {
@@ -44,6 +27,5 @@ module "k8s_manifests" {
   db_storage_size        = var.db_storage_size
   api_replica_count      = var.api_replica_count
   frontend_replica_count = var.frontend_replica_count
-  react_app_api_endpoint = "http://${module.minikube.host}:30080"
-  depends_on             = [module.minikube]
+  react_app_api_endpoint = "http://192.168.49.2:30080"
 }

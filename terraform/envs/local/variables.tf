@@ -13,7 +13,7 @@ variable "driver" {
 variable "memory" {
   description = "Memory in MB for the Minikube node"
   type        = string
-  default     = "4096"
+  default     = "2500"
 }
 
 variable "cpus" {
@@ -25,7 +25,7 @@ variable "cpus" {
 variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
-  default     = "v1.28.0"
+  default     = "v1.30.0"
 }
 
 variable "addons" {
