@@ -33,9 +33,9 @@ resource "kubernetes_secret" "mongodb" {
     }
   }
   data = {
-    MONGO_INITDB_ROOT_USERNAME = base64encode(var.db_user)
-    MONGO_INITDB_ROOT_PASSWORD = base64encode(var.db_pass)
-    MONGO_INITDB_DATABASE      = base64encode(var.db_name)
+    MONGO_INITDB_ROOT_USERNAME = "YWRtaW4="
+    MONGO_INITDB_ROOT_PASSWORD = "YWRtaW4xMjM="
+    MONGO_INITDB_DATABASE      = "dGVzdA=="
   }
   type = "Opaque"
 }
@@ -182,8 +182,8 @@ resource "kubernetes_secret" "todo_api" {
     }
   }
   data = {
-    DB_CONNECTION = base64encode("mongodb://${var.db_user}:${var.db_pass}@mongodb:27017/${var.db_name}?authSource=admin")
-    DB_NAME       = base64encode(var.db_name)
+    DB_CONNECTION = "bW9uZ29kYjovL2FkbWluOmFkbWluMTIzQG1vbmdvZGI6MjcwMTcvdGVzdD9hdXRoU291cmNlPWFkbWlu"
+    DB_NAME       = "dGVzdA=="
   }
   type = "Opaque"
 }
@@ -205,6 +205,8 @@ resource "kubernetes_deployment" "todo_api" {
       tier = "backend"
     }
   }
+  wait_for_rollout = false
+
   spec {
     replicas = var.api_replica_count
     selector {
@@ -341,7 +343,7 @@ resource "kubernetes_secret" "todo_frontend" {
     }
   }
   data = {
-    REACT_APP_API_ENDPOINT = base64encode(var.react_app_api_endpoint)
+    REACT_APP_API_ENDPOINT = "aHR0cDovLzE5Mi4xNjguNDkuMjozMDA4MA=="
   }
   type = "Opaque"
 }
@@ -363,6 +365,8 @@ resource "kubernetes_deployment" "todo_frontend" {
       tier = "frontend"
     }
   }
+  wait_for_rollout = false
+
   spec {
     replicas = var.frontend_replica_count
     selector {
