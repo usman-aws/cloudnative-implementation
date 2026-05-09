@@ -24,10 +24,11 @@ module "minikube" {
 }
 
 provider "kubernetes" {
-  host                   = module.minikube.host
-  client_certificate     = base64decode(module.minikube.client_certificate)
-  client_key             = base64decode(module.minikube.client_key)
-  cluster_ca_certificate = base64decode(module.minikube.cluster_ca_certificate)
+  host = module.minikube.host
+
+  client_certificate     = module.minikube.client_certificate
+  client_key             = module.minikube.client_key
+  cluster_ca_certificate = module.minikube.cluster_ca_certificate
 }
 
 module "k8s_manifests" {
