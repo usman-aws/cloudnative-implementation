@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-frontend
+  namespace: todo-app
+  labels:
+    app: todo-frontend
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todo-frontend
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: todo-frontend
+        tier: frontend
+    spec:
+      serviceAccountName: todo-frontend-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 1001
+        runAsNonRoot: true
+      initContainers:
+        - name: env-generator
+          image: abdennour/dotenv-to-js-object:4ea
+          args:
+            - --dest=/data
+            - --env-vars-filter=REACT_APP_
+            - --run-as=job
+          envFrom:
+            - secretRef:
+                name: todo-frontend-secret
+          volumeMounts:
+            - name: env-js
+              mountPath: /data
+      containers:
+        - name: todo-frontend
+          image: usmanaws/go-to-do-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: env-js
+              mountPath: /opt/app/config
+              readOnly: true
+      volumes:
+        - name: env-js
+          emptyDir: {}
